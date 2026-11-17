@@ -1,0 +1,350 @@
+{
+  "title": "五款游戏的提现机制拆解",
+  "date": "2026-11-17",
+  "sample_acquired_date": "2026-11-16",
+  "scope": "同版本客户端代码、配置与已标记的历史取证；商业作用为设计判断，未取得真实支付与投放收益证明。",
+  "games": [
+    {
+      "id": "happy-mahjong",
+      "name": "Happy Mahjong",
+      "version": "2.4",
+      "kind": "阶段任务型",
+      "theme": "mahjong",
+      "tags": [
+        "tasks",
+        "progress"
+      ],
+      "subtitle": "五段任务，展示目标与实际口径分离。",
+      "short": "阶段任务与最终回调",
+      "terminal": "最终执行链未闭合",
+      "summary": "关卡、有效活跃、金额、活跃日期、玩家等级依次推进；阶段完成和最终领取使用不同的执行链。",
+      "flow": [
+        "显示8关",
+        "实际40关",
+        "多段任务",
+        "玩家30级",
+        "领取缺下一流程"
+      ],
+      "facts": [
+        {
+          "value": "8 → 40",
+          "label": "显示关卡 / 实际目标",
+          "note": "第一段显示8关，实际目标为40关。"
+        },
+        {
+          "value": "99,999",
+          "label": "29级升30级所需完成数",
+          "note": "前段累计745次完成到29，末级要求陡增。"
+        },
+        {
+          "value": "1 / 30",
+          "label": "SDK钱包第五段固定进度",
+          "note": "该展示没有读取真实玩家等级。"
+        }
+      ],
+      "strengths": [
+        "阶段切换、奖励弹窗、延后与恢复由专门协调器组织。",
+        "玩家离开页面后的任务状态可以保存和恢复。"
+      ],
+      "weaknesses": [
+        "显示关卡、有效时长和真实统计口径不一致，完成成本难以预估。",
+        "最终资格完成后没有创建下一待执行流程；领取关闭钱包后不再推进。",
+        "记录页只追到关闭绑定，没有完整的列表填充。"
+      ],
+      "correction": "“极难达到30级”和“后台绝对达不到30级”不同。这里还必须单独检查最终领取的执行链。",
+      "business": "前期阶段反馈具备连续结构；后期任务量增长明显，但不能由流程长度推定长期留存或回本。",
+      "findings": [
+        {
+          "id": "F-HM-001",
+          "location": "PhaseTaskService / 任务配置",
+          "claim": "首段显示8关，实际要求40关；有效活跃还附带分段成功计数条件。"
+        },
+        {
+          "id": "F-HM-002",
+          "location": "GetSdkProgress / PlayerLevelProgress",
+          "claim": "第五段展示固定Current=1、Target=30、Normalized=0；真实等级表单独计算。"
+        },
+        {
+          "id": "F-HM-003",
+          "location": "CandyPanel.OnAction → PhaseFlowCoordinator.RunFlow",
+          "claim": "最终完成不创建pendingFlow；没有待执行流程时返回，记录页未形成完整列表。"
+        }
+      ]
+    },
+    {
+      "id": "solitaire-money-tree",
+      "name": "Solitaire Money Tree",
+      "version": "1.6",
+      "kind": "进度转收集型",
+      "theme": "solitaire",
+      "tags": [
+        "collection",
+        "progress"
+      ],
+      "subtitle": "100%之后，还有一套字母收集条件。",
+      "short": "进度完成后的字母收集",
+      "terminal": "已追踪奖池缺失A",
+      "summary": "前段按关卡增加提现进度，达到100%后出现FINAL STEP，继续要求收集G/R/E/A/T。",
+      "flow": [
+        "关卡进度",
+        "51级到100%",
+        "GREAT收集",
+        "A权重为0",
+        "最终领取未闭合"
+      ],
+      "facts": [
+        {
+          "value": "51",
+          "label": "达到100%的玩家等级",
+          "note": "50级为99.99%，51级为100%。"
+        },
+        {
+          "value": "5 / 4 / 3 / 0 / 1",
+          "label": "G / R / E / A / T权重",
+          "note": "正权重累计算法不会选中第四项A。"
+        },
+        {
+          "value": "10",
+          "label": "Money Garden植物种类",
+          "note": "牌局、种树、签到和转盘共同提供显示余额反馈。"
+        }
+      ],
+      "strengths": [
+        "牌局与植物产出、升级提供多种可操作的成长来源。",
+        "重复字母有明确的显示现金补偿，奖励分支可追踪。"
+      ],
+      "weaknesses": [
+        "进度100%与整个提现流程完成不是同一含义，之后继续出现条件。",
+        "已追踪关卡结算源中A权重为0，已追踪签到/转盘也不提供字母。",
+        "历史受控五字母全亮时CLAIM仍灰；最终页未找到完整领取提交链。"
+      ],
+      "correction": "100%本身可以达到。问题在后置收集及最终领取页，不能概括为“进度永远到不了100%”。",
+      "business": "前期成长内容来源较多；收集本可承载中期目标，但当前选择路径与最终按钮没有形成可完成的闭环。",
+      "findings": [
+        {
+          "id": "F-SMT-001",
+          "location": "FetchJIndu / FinalMoveView",
+          "claim": "playerLevel50为9999/10000，51为10000/10000；之后进入GREAT收集页。"
+        },
+        {
+          "id": "F-SMT-002",
+          "location": "RoundWinView → FetchWeightSlot",
+          "claim": "Z1..Z5对应G/R/E/A/T，权重[5,4,3,0,1]；结论限定已追踪本地奖励源。"
+        },
+        {
+          "id": "F-SMT-003",
+          "location": "FinalMoveView.Start / RebuildView",
+          "claim": "已追踪最终页负责显示和关闭；五字母全true是反事实受控状态，不是自然收集证明。"
+        }
+      ]
+    },
+    {
+      "id": "rings-cash",
+      "name": "Rings Cash",
+      "version": "1.0.2",
+      "kind": "多分支订单型",
+      "theme": "rings",
+      "tags": [
+        "tasks",
+        "collection",
+        "queue"
+      ],
+      "subtitle": "现金、碎片、实物转盘三条线并行。",
+      "short": "多层订单、等待与物流",
+      "terminal": "队列归零仍等待",
+      "summary": "现金订单叠加关卡、广告、跨日任务与等待；手机碎片和独立实物转盘另有订单与物流流程。",
+      "flow": [
+        "20 / 30关入口",
+        "金额与VIP",
+        "多轮任务 / 等待",
+        "7952人队列",
+        "仅刷新数字"
+      ],
+      "facts": [
+        {
+          "value": "03",
+          "label": "相互独立的主要分支",
+          "note": "现金订单、手机17碎片、独立实物转盘。"
+        },
+        {
+          "value": "0 人",
+          "label": "现金队列仍停原阶段",
+          "note": "归零后队列刷新只更新文本，没有结算迁移。"
+        },
+        {
+          "value": "43 天",
+          "label": "US本地物流表末节点",
+          "note": "61920分钟，末节点为地址错误退回，另有保存的秒级偏移。"
+        }
+      ],
+      "strengths": [
+        "不同类型目标拥有各自的状态、入口与记录。",
+        "奖项目录、地区和物流配置可以通过参数化结构复用。"
+      ],
+      "weaknesses": [
+        "账号、VIP、补偿、广告计数、日期和多套订单交叉，理解和维护成本高。",
+        "现金队列降到0后仍在stage6，不推进为付款完成。",
+        "两套实物分支读取本地物流表，当前53地区表均以地址错误退回结束。"
+      ],
+      "correction": "手机碎片并非永久卡90。超过90后的部分限制按日期判断，次日广告仍能补到100；需要继续看下游订单。",
+      "business": "多分支承载了多种目标与较长等待，但查看订单和物流不等同于对核心玩法的长期兴趣。",
+      "findings": [
+        {
+          "id": "F-RC-001",
+          "location": "GameController / 订单阶段回调",
+          "claim": "同一版本因福利与Enhanced状态显示20或30关入口；后续叠加金额、关卡、广告和时间条件。"
+        },
+        {
+          "id": "F-RC-002",
+          "location": "WithdrawalQueueAhead / RefreshOrderQueue",
+          "claim": "max(0,7952-floor(elapsed_ms/600000))；刷新只改文本，归零不触发完成。"
+        },
+        {
+          "id": "F-RC-003",
+          "location": "PrizeFragmentLedger / 碎片广告限制",
+          "claim": "超过90后地图停止，部分广告限制在次日解除，目标100仍可达到。"
+        },
+        {
+          "id": "F-RC-004 / 005",
+          "location": "PrizeDeliveryCatalog / LuckyLotteryShippingTimeline",
+          "claim": "实物状态由本地提交时间、地区和包内时间表选择；独立转盘还有SIM/GAID可用性门控。"
+        }
+      ]
+    },
+    {
+      "id": "smash-cash",
+      "name": "Smash Cash",
+      "version": "1.0.3",
+      "kind": "审核与储蓄型",
+      "theme": "smash",
+      "tags": [
+        "review",
+        "progress"
+      ],
+      "subtitle": "奖励逐段减小，审核停在待付款。",
+      "short": "分档奖励与审核终态",
+      "terminal": "Approved Payment Pending",
+      "summary": "普通提现采用国家档位和递减奖励，提交后经过三段审核；利息/储蓄拥有另一套任务与记录。",
+      "flow": [
+        "分档累计金额",
+        "提交申请",
+        "三段审核",
+        "stage 3",
+        "已批准 / 等待付款"
+      ],
+      "facts": [
+        {
+          "value": "0–0.01",
+          "label": "US最后段普通奖励范围",
+          "note": ">=999.5后仍允许正数，允许0不等于每次必为0。"
+        },
+        {
+          "value": "stage 3",
+          "label": "普通审核函数终点",
+          "note": "达到该阶段后不再推进，显示等待付款。"
+        },
+        {
+          "value": "04",
+          "label": "独立利息 / 储蓄任务",
+          "note": "奖励次数100、储蓄广告30、US余额目标170、登录7天。"
+        }
+      ],
+      "strengths": [
+        "国家档位、奖励区间和审核记录采用配置与数据结构组织。",
+        "普通提现与利息/储蓄可以分开追踪状态和提交记录。"
+      ],
+      "weaknesses": [
+        "审核结束没有接入已追踪路径中的资金完成状态。",
+        "审核每次检查重新抽当前阶段的时间阈值，完成时间不易形成稳定预期。",
+        "利息提交写入InProgress并保存金额、日期，付款展示不能当作转账完成。"
+      ],
+      "correction": "不能仅凭最后奖励段允许0，就断言数学上永远攒不到1000。更明确的代码终点是审核停在待付款。",
+      "business": "递减奖励改变接近目标时的反馈节奏；储蓄提供副线，但等待审核本身不代表持续参与。",
+      "findings": [
+        {
+          "id": "F-SC-001 / 002",
+          "location": "WithdrawalSubmissionData.AdvanceReview",
+          "claim": "三组阈值[12,24)、[24,48)、[48,72)小时；reviewStage>=3不再推进。"
+        },
+        {
+          "id": "F-SC-003",
+          "location": "PureRewardPolicy / SubmitPurePiggyWithdrawal",
+          "claim": "独立四段任务后写InProgress记录；显示付款阶段与实际付款分开。"
+        },
+        {
+          "id": "来源：奖励策略配置",
+          "location": "PureRewardPolicy / 国家奖励配置",
+          "claim": "US末段>=999.5的普通奖励允许0–0.01；不能把随机区间中的0理解为恒定0。"
+        }
+      ]
+    },
+    {
+      "id": "pixel-sand-puzzle",
+      "name": "Pixel Sand Puzzle",
+      "version": "1.0.4",
+      "kind": "多口径等级型",
+      "theme": "pixel",
+      "tags": [
+        "tasks",
+        "review",
+        "progress"
+      ],
+      "subtitle": "显示关、有效时长和玩家等级各算一套。",
+      "short": "进度口径与等级返回域",
+      "terminal": "要求30 / 最高返回28",
+      "summary": "短关卡目标后追加在线、48小时、银行审核与等级条件；最终目标超出当前等级函数的返回范围。",
+      "flow": [
+        "显示5关",
+        "实际16局",
+        "在线 / 48h审核",
+        "要求玩家30级",
+        "函数最高返回28"
+      ],
+      "facts": [
+        {
+          "value": "5 → 16",
+          "label": "显示关 / 实际关卡数",
+          "note": "完成前5个显示关合计需要16个原始关卡。"
+        },
+        {
+          "value": "× 0.7",
+          "label": "有效在线时长折算",
+          "note": "计入20分钟约需28分35秒实际有效活跃。"
+        },
+        {
+          "value": "30 / 28",
+          "label": "最终要求 / 当前最高返回",
+          "note": "结论限定当前生效等级表与函数组合。"
+        }
+      ],
+      "strengths": [
+        "关卡、在线、签到和申请状态具备配置与记录载体。",
+        "能够通过配置和调用关系追溯各进度口径的来源。"
+      ],
+      "weaknesses": [
+        "多套进度和折算时长使玩家难估计真实达标成本。",
+        "当前GetCurrentUserLv最高返回28，最终要求30，不只是升级速度慢。",
+        "排队的9812人/8632位是本地语言文案；签到后四档还依赖同一30级条件。"
+      ],
+      "correction": "这里是当前等级返回域无法满足目标。配置中的0.01与页面成功都不代表已取得真实小额支付证明。",
+      "business": "早期目标表达较短，后续转向在线和等级；当前末端条件不可由该等级函数满足，无法形成完整达成闭环。",
+      "findings": [
+        {
+          "id": "F-PSP-001 / 002",
+          "location": "GetShowLevel / 关卡映射表",
+          "claim": "前5个显示关对应16个原始关卡，不能把显示关数当实际局数。"
+        },
+        {
+          "id": "F-PSP-003",
+          "location": "PlayerLvManager.GetCurrentUserLv / 当前有效等级表",
+          "claim": "29与30级阈值相同，首个大于进度的条目返回Level-1，遍历耗尽返回1；最高返回28。"
+        },
+        {
+          "id": "F-PSP-004 / 005",
+          "location": "语言ID135 / SigninManager.IsFinishTotalCondition",
+          "claim": "队列人数和位置直接写在文案；后四档签到要求玩家30级，Real_Value配置为0。"
+        }
+      ]
+    }
+  ]
+}
