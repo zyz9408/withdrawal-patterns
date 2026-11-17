@@ -1,12 +1,12 @@
-# 五款游戏的提现机制拆解
+# 六款游戏的提现机制拆解
 
-一份可分享的中文研究网页，对比 Happy Mahjong、Solitaire Money Tree、Rings Cash、Smash Cash、Pixel Sand Puzzle 的提现机制、结构优点与关键问题。
+一份可分享的中文研究网页，对比 Happy Mahjong、Solitaire Money Tree、Rings Cash、Smash Cash、Pixel Sand Puzzle、Crazy Water Puzzle 的提现机制、结构优点与关键问题。
 
 线上页面：https://zyz9408.github.io/withdrawal-patterns/
 
 ## 内容与功能
 
-- 五款同版本研究的对比总览与详细拆解。
+- 六款同版本研究的对比总览与详细拆解。
 - 机制筛选、文字搜索、可展开的代码依据。
 - 整页与单款锚点分享、文字版下载、打印/PDF布局。
 - 响应式布局、键盘导航和减少动效支持。
@@ -29,3 +29,5 @@ python build.py
 ## 研究边界
 
 历史受控状态不等于自然达标、实际收款或真实配送。部分结论只针对已追踪的本地路径。没有各款实际CPI、净eCPM和成熟留存数据，不作LTV、ROI或回本能力排名。
+
+新增Crazy Water Puzzle1.0.0：本轮仅做静态代码与包内配置分析，没有新增游戏运行取证。

@@ -1,8 +1,8 @@
 {
-  "title": "五款游戏的提现机制拆解",
+  "title": "六款游戏的提现机制拆解",
   "date": "2026-11-17",
   "sample_acquired_date": "2026-11-16",
-  "scope": "同版本客户端代码、配置与已标记的历史取证；商业作用为设计判断，未取得真实支付与投放收益证明。",
+  "scope": "六款同版本客户端代码和配置；前五款复用已标记历史取证，Crazy Water本轮仅静态分析。商业作用为设计判断，未取得真实支付与投放收益证明。",
   "games": [
     {
       "id": "happy-mahjong",
@@ -343,6 +343,81 @@
           "id": "F-PSP-004 / 005",
           "location": "语言ID135 / SigninManager.IsFinishTotalCondition",
           "claim": "队列人数和位置直接写在文案；后四档签到要求玩家30级，Real_Value配置为0。"
+        }
+      ]
+    },
+    {
+      "id": "crazy-water",
+      "name": "Crazy Water Puzzle",
+      "version": "1.0.0",
+      "kind": "多阶段资格型",
+      "theme": "water",
+      "tags": [
+        "tasks",
+        "progress",
+        "review"
+      ],
+      "analysis_mode": "本轮仅静态代码与包内配置分析；未启动游戏、跑广告或验证真实付款。",
+      "subtitle": "小额记录之后，继续转向余额、有效打卡与等级。",
+      "short": "九段条件与严格等级资格",
+      "terminal": "要求>30 / 最高返回28",
+      "summary": "九段主阶段和独立引导共同控制页面：前段US小额配置与本地成功记录，后段追加隐藏关、动态余额、有效日期和等级条件。",
+      "flow": [
+        "小额配置 / 记录",
+        "隐藏关与余额目标",
+        "5个有效打卡日",
+        "最终等级资格",
+        "包内返回域不满足"
+      ],
+      "facts": [
+        {
+          "value": "0.18 / 0.24",
+          "label": "前两段US金额配置",
+          "note": "对应Condition_1=1/2；本地成功记录不代表实际小额付款。"
+        },
+        {
+          "value": "5天 × 10关",
+          "label": "有效打卡日数 / US日门槛",
+          "note": "有效日计入仅在Step6/7，按本地日期当天计一次，不是纯登录。"
+        },
+        {
+          "value": ">30 / 28",
+          "label": "资格完成判断 / 包内最高返回",
+          "note": "UserMaxLv=30，完成判断用严格大于；结论限定包内表与原函数。"
+        }
+      ],
+      "strengths": [
+        "阶段、国家参数与本地记录可分别追踪，便于定位每个条件的来源。",
+        "主按钮通过异步路由切换金额、打卡、等级和处理说明页。"
+      ],
+      "weaknesses": [
+        "显示关、藏关表与全局计数还有减3偏移，单看显示目标难估实际成本。",
+        "等级页面目标30，但完成谓词是>30；包内等级表和原函数最高返回28。",
+        "确认回调先写本地isTx成功标记再显示成功页，尚无真实资金回执。",
+        "主面板提现提示使用本地随机用户名、渠道和配置金额，不能代表真实他人收款。"
+      ],
+      "correction": "小额配置、成功标记和奖励提示不是支付平台确认。最终还要分清“显示达到30”与代码要求“严格大于30”。",
+      "business": "前段反馈之后，后段要求余额、有效日期和等级；能够描述条件怎样延长，但缺该包的实际收益与留存数据，不能推定已回本。",
+      "findings": [
+        {
+          "id": "F-CW-001",
+          "location": "GetEMergeSortStep / StepConfig / GameLoginDayManager",
+          "claim": "Step1..9分段推进；构造值MaxLoginDay=5，US日关卡门槛10；有效日期只在对应阶段且关卡计数满足时增加。"
+        },
+        {
+          "id": "F-CW-002",
+          "location": "GetUserLv 0xEC7CA8 → GetIsFinishGameLevel 0xEDF2D0",
+          "claim": "首个更大阈值返回lv-1，耗尽返回1；29/30阈值同为1000002804，最大返回28。UserMaxLv30而完成谓词>30。"
+        },
+        {
+          "id": "F-CW-003",
+          "location": "Confirm.MoveNext / SetTakeOutLogData / WaterRewardPrompt",
+          "claim": "确认回调置isTx=true并写本地PlayerPrefs后推成功页；Java showRewardConfirmation只是本地Toast，不是资金确认。"
+        },
+        {
+          "id": "F-CW-004",
+          "location": "SetNoticeData → RandomChannel / GetUserName / GetDMDanmuValue",
+          "claim": "名字由两个列表随机组合，提示金额来自包内区间。结论限定此提示构造，不能作为真实他人提现证明。"
         }
       ]
     }

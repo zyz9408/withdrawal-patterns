@@ -25,7 +25,7 @@
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
-    count.textContent = matches === data.games.length ? "显示全部 5 款研究" : `显示 ${matches} / 5 款研究`;
+    count.textContent = matches === data.games.length ? `显示全部 ${data.games.length} 款研究` : `显示 ${matches} / ${data.games.length} 款研究`;
     empty.hidden = matches !== 0;
     updateProgress();
   }
@@ -82,7 +82,7 @@
     url.search = "";
     const game = data.games.find(item => item.id === id);
     const title = game ? `${game.name} · 提现机制拆解` : data.title;
-    const text = game ? `${game.kind}：${game.subtitle}` : "五款游戏的提现机制、结构优点与关键问题。";
+    const text = game ? `${game.kind}：${game.subtitle}` : `${data.games.length}款游戏的提现机制、结构优点与关键问题。`;
     try {
       await navigator.clipboard.writeText(url.href);
       toast(game ? `${game.name} 单款链接已复制` : "研究页面链接已复制");
