@@ -1,7 +1,14 @@
 'use strict';
 (() => {
   const data = JSON.parse(document.getElementById('flow-data').textContent);
-  const modes = {natural:'自然操作', controlled:'受控回放', counterfactual:'反事实回放', user_reference:'用户原图'};
+  const modes = {
+    natural: '自然操作',
+    controlled: '受控回放',
+    counterfactual: '反事实回放',
+    user_reference: '用户原图',
+    design_reference: '方案截图',
+  };
+  const sourceId = image => `${image.id} · ${image.source_label || `v${image.version}`}`;
   const stages = new Map();
   const shots = new Map();
   data.games.forEach(g => g.branches.forEach(b => b.stages.forEach(s => {
@@ -56,7 +63,7 @@
     const image = link.querySelector('img');
     image.src = im.thumb; image.alt = im.caption; image.width = im.width; image.height = im.height;
     card.querySelector('.screen-caption').textContent = im.caption;
-    card.querySelector('.source-id').textContent = `${im.id} · v${im.version}`;
+    card.querySelector('.source-id').textContent = sourceId(im);
     const mode = card.querySelector('.mode');
     mode.className = `mode mode-${im.mode}`; mode.textContent = modes[im.mode] || '受控回放';
     const list = stages.get(card.id).stage.images;
@@ -71,7 +78,7 @@
     document.getElementById('viewer-image').src = im.src;
     document.getElementById('viewer-image').alt = im.caption;
     document.getElementById('viewer-caption').textContent = im.caption;
-    document.getElementById('viewer-mode').textContent = `${modes[im.mode] || '受控回放'} · ${im.id} · v${im.version}`;
+    document.getElementById('viewer-mode').textContent = `${modes[im.mode] || '受控回放'} · ${sourceId(im)}`;
     document.getElementById('viewer-position').textContent = `${viewerIndex+1} / ${viewerImages.length}`;
     document.getElementById('viewer-original').href = im.src;
     document.getElementById('viewer-prev').disabled = viewerIndex === 0;

@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "updated": "2026-11-17",
-  "title": "六款游戏 · 假提现逐阶段图解",
+  "updated": "2026-11-19",
+  "title": "七个案例 · 假提现逐阶段图解",
   "games": [
     {
       "id": "happy-mahjong",
@@ -2586,6 +2586,187 @@
                   "source_sha256": "21f1a46f74cd7efc09f63e6d2c4d32413efcc2450b52f1971439adff99d103be"
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group-one-plan",
+      "slug": "Group_One_Plan",
+      "name": "一组方案",
+      "version": null,
+      "evidence_type": "design",
+      "intro": "开局 200 模拟美元，余额到 500 后进入申请、任务、时长、审核和排队五段。图源为设计阶段表和界面画板。",
+      "branches": [
+        {
+          "id": "main",
+          "title": "提现主线",
+          "intro": "每步附原方案对应行。钱包、任务和审核步骤另附界面画板参考。原始方案段落、图中示例与待确认口径随步骤说明。",
+          "stages": [
+            {
+              "id": "group-one-plan--main--01",
+              "title": "达到 500，申请并填写账户",
+              "visible": "钱包展示 500 模拟美元的目标与当前余额差额。画板另有钱包和收款账户表单。",
+              "rule": "显示余额达到 500 模拟美元。",
+              "action": "点击提现申请，填写收款账户信息并提交。",
+              "after": "进入 15 项任务阶段。",
+              "images": [
+                {
+                  "id": "YS-01-rule",
+                  "src": "assets/plan/YS-01-rule.webp",
+                  "thumb": "assets/plan/YS-01-rule.webp",
+                  "width": 746,
+                  "height": 64,
+                  "mode": "design_reference",
+                  "caption": "第 1 段规则：达到 500 后申请并填写账户",
+                  "source_label": "阶段表 §3.3",
+                  "source_sha256": "06aae56bcb759a9fd2325b4f64a3dd3e66a1617484f6e79dae0c54a4f43b351f"
+                },
+                {
+                  "id": "YS-01-account",
+                  "src": "assets/plan/YS-01-account.webp",
+                  "thumb": "assets/plan/YS-01-account.webp",
+                  "width": 218,
+                  "height": 177,
+                  "mode": "design_reference",
+                  "caption": "钱包和账户表单的界面参考",
+                  "source_label": "界面设计 §4",
+                  "source_sha256": "3ba3e1c2a7e57f70f40a7b1cbcae4211609dcc2f85a8d641fe51d2c8f6343538"
+                },
+                {
+                  "id": "YS-flow-chart",
+                  "src": "assets/plan/YS-flow-chart.webp",
+                  "thumb": "assets/plan/YS-flow-chart.webp",
+                  "width": 773,
+                  "height": 60,
+                  "mode": "design_reference",
+                  "caption": "原方案流程图：500 申请到排队",
+                  "source_label": "流程图 §3.3",
+                  "source_sha256": "1a7f1e0470a578c98674c0727bb8ee1ee0c977bfe4af14fe53dcb73f6d7af45c"
+                }
+              ],
+              "code": "提现阶段表 §3.3 · 第 1 行",
+              "note": "原方案开局显示 200 模拟美元。流程图和界面参考里的金额各有示例口径。",
+              "terminal": false
+            },
+            {
+              "id": "group-one-plan--main--02",
+              "title": "完成 15 项任务",
+              "visible": "任务阶段显示还差几项。原文以“还差 3 项”为示例。",
+              "rule": "已填写账户信息。此阶段要求累计完成 15 项任务。",
+              "action": "进入任务列表完成任务，查看剩余数量。",
+              "after": "完成 15 项后进入追加游玩时长。",
+              "images": [
+                {
+                  "id": "YS-02-rule",
+                  "src": "assets/plan/YS-02-rule.webp",
+                  "thumb": "assets/plan/YS-02-rule.webp",
+                  "width": 746,
+                  "height": 63,
+                  "mode": "design_reference",
+                  "caption": "第 2 段规则：完成 15 项任务",
+                  "source_label": "阶段表 §3.3",
+                  "source_sha256": "ac6f717363eb7a8bcdfccb165cc689559721550c4c1e0bd17a876c50f0de875a"
+                },
+                {
+                  "id": "YS-02-tasks",
+                  "src": "assets/plan/YS-02-tasks.webp",
+                  "thumb": "assets/plan/YS-02-tasks.webp",
+                  "width": 73,
+                  "height": 101,
+                  "mode": "design_reference",
+                  "caption": "任务列表的界面参考",
+                  "source_label": "界面设计 §4",
+                  "source_sha256": "f2bafb9334c188cfe66579dd5a37566d72c288c291babcce02c926c04cd69f25"
+                }
+              ],
+              "code": "提现阶段表 §3.3 · 第 2 行",
+              "note": "原文列出了每日和生涯任务。哪些任务计入本阶段、重复完成如何计数均待确认。",
+              "terminal": false
+            },
+            {
+              "id": "group-one-plan--main--03",
+              "title": "再游玩 20 分钟",
+              "visible": "文案继续要求再游玩 20 分钟。",
+              "rule": "已经完成 15 项任务。",
+              "action": "回到游戏继续游玩。",
+              "after": "追加的 20 分钟达到后进入审核。",
+              "images": [
+                {
+                  "id": "YS-03-rule",
+                  "src": "assets/plan/YS-03-rule.webp",
+                  "thumb": "assets/plan/YS-03-rule.webp",
+                  "width": 746,
+                  "height": 64,
+                  "mode": "design_reference",
+                  "caption": "第 3 段规则：再游玩 20 分钟",
+                  "source_label": "阶段表 §3.3",
+                  "source_sha256": "ef0bc7a715fe1e96aed2696a93a33c5b0967457f106774e956f758b63392bc00"
+                }
+              ],
+              "code": "提现阶段表 §3.3 · 第 3 行",
+              "note": "原文没有定义有效时长的范围或退出后续算规则。",
+              "terminal": false
+            },
+            {
+              "id": "group-one-plan--main--04",
+              "title": "审核与登录条件",
+              "visible": "阶段表展示审核状态，界面示例要求连续登录 3 天。画板也提供审核进度弹窗参考。",
+              "rule": "额外 20 分钟已完成。阶段表写“3 天以后上线”，流程图写“审核 3 个工作日”，按钮旁的示例文案写“连续登录 3 天”。",
+              "action": "在审核阶段查看进度，按最终采用的条件登录。",
+              "after": "满足审核后的登录条件，进入排队阶段。",
+              "images": [
+                {
+                  "id": "YS-04-rule",
+                  "src": "assets/plan/YS-04-rule.webp",
+                  "thumb": "assets/plan/YS-04-rule.webp",
+                  "width": 746,
+                  "height": 64,
+                  "mode": "design_reference",
+                  "caption": "第 4 段规则：审核与登录的文字口径",
+                  "source_label": "阶段表 §3.3",
+                  "source_sha256": "7deb74d8f2824b61dfab63092ad1baadb14fd4a86fd3d3b8ddcbcaf4b3e3c7d2"
+                },
+                {
+                  "id": "YS-04-review",
+                  "src": "assets/plan/YS-04-review.webp",
+                  "thumb": "assets/plan/YS-04-review.webp",
+                  "width": 77,
+                  "height": 105,
+                  "mode": "design_reference",
+                  "caption": "审核弹窗的界面参考，画板时长是示例",
+                  "source_label": "完成看板 §3.3",
+                  "source_sha256": "1a036ece72d796a9067682c9d1c81e116534fe17fe7ab9d8b4be37dd469214b8"
+                }
+              ],
+              "code": "提现阶段表 §3.3 · 第 4 行 / 提现流程图 / 完成看板",
+              "note": "三种时间口径待统一。审核弹窗上的示例倒计时与正式条件分别记录。",
+              "terminal": false
+            },
+            {
+              "id": "group-one-plan--main--05",
+              "title": "排队，每天登录",
+              "visible": "排队页显示剩余人数。原文以“还剩 17 人”为文案示例。",
+              "rule": "审核后的上线条件已满足。",
+              "action": "每天登录查看队列。",
+              "after": "原方案的流程记录止于排队。队列更新、归零后状态及真正出款未定义。",
+              "images": [
+                {
+                  "id": "YS-05-rule",
+                  "src": "assets/plan/YS-05-rule.webp",
+                  "thumb": "assets/plan/YS-05-rule.webp",
+                  "width": 746,
+                  "height": 63,
+                  "mode": "design_reference",
+                  "caption": "第 5 段规则：每天登录并查看排队",
+                  "source_label": "阶段表 §3.3",
+                  "source_sha256": "96b01782883959bf3b1ea40843abfcf7de0a0677885f60745ddf57aeefc62f6e"
+                }
+              ],
+              "code": "提现阶段表 §3.3 · 第 5 行",
+              "note": "已进入流程的玩家次日登录先看进度弹窗，完成看板也标示每完成一段弹一次。",
+              "terminal": true
             }
           ]
         }
